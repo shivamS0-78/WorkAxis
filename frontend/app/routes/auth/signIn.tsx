@@ -1,9 +1,16 @@
 import { signInSchema } from '@/lib/signInSchema';
-import React from 'react'
-import { useForm } from "react-hook-form";
-import {z} from "zod";
-import {zodResolver} from "@hookform/resolvers/zod"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import React from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import {
   Form,
   FormControl,
@@ -11,35 +18,35 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input"
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 import { Link } from 'react-router';
-import { Loader2 } from "lucide-react";
+import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-type signInFormData = z.infer<typeof signInSchema>
+type signInFormData = z.infer<typeof signInSchema>;
 const SignIn = () => {
-    const form = useForm<signInFormData>({
-        resolver : zodResolver(signInSchema),
-        defaultValues: {
-            email:"",
-            password:"",
-        },
-    });
+  const form = useForm<signInFormData>({
+    resolver: zodResolver(signInSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
 
-    const handleOnSubmit =(values: signInFormData) => {
-        console.log(values);
-    }
+  const handleOnSubmit = (values: signInFormData) => {
+    console.log(values);
+  };
 
-    return (
-    <div className='min-h-screen flex flex-col items-center justify-center bg-muted/40 p-4 w-full '>
-    <Card className='max-w-md w-full shadow-xl'>
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center bg-muted/40 p-4 w-full ">
+      <Card className="max-w-md w-full shadow-xl">
         <CardHeader>
-            <CardTitle>Welcome Back</CardTitle>
-            <CardDescription>Sign to your account</CardDescription>
+          <CardTitle>Welcome Back</CardTitle>
+          <CardDescription>Sign to your account</CardDescription>
         </CardHeader>
         <CardContent>
-            <Form {...form}>
+          <Form {...form}>
             <form
               onSubmit={form.handleSubmit(handleOnSubmit)}
               className="space-y-6"
@@ -87,9 +94,9 @@ const SignIn = () => {
                 )}
               />
 
-              <Button type="submit" className="w-full" >
+              <Button type="submit" className="w-full">
                 Sign in
-              </Button  >
+              </Button>
             </form>
           </Form>
 
@@ -101,9 +108,9 @@ const SignIn = () => {
             </div>
           </CardFooter>
         </CardContent>
-    </Card>
+      </Card>
     </div>
-  )
-}
+  );
+};
 
-export default SignIn
+export default SignIn;
