@@ -1,24 +1,44 @@
-import express from "express"
+import express from 'express';
 
-import {z} from "zod";
-import { validateRequest } from "zod-express";
-import { registerSchema,loginSchema } from "../libs/validateSchema.js";
-import { loginUser, registerUser } from "../controllers/auth-controller.js";
+import { z } from 'zod';
+import { validateRequest } from 'zod-express';
+import {
+  registerSchema,
+  loginSchema,
+  verifyEmailSchema,
+} from '../libs/validateSchema.js';
+import {
+  loginUser,
+  registerUser,
+  verifyEmail,
+} from '../controllers/auth-controller.js';
+import pkg from 'jsonwebtoken';
+const { verify } = pkg;
 
 const router = express.Router();
 
-router.post('/register' ,
-    validateRequest({
-        body : registerSchema,
-    }),
-    registerUser
-)
+router.post(
+  '/register',
+  validateRequest({
+    body: registerSchema,
+  }),
+  registerUser
+);
 
-router.post('/login' ,
-    validateRequest({
-        body : loginSchema,
-    }),
-    loginUser
-)
+router.post(
+  '/login',
+  validateRequest({
+    body: loginSchema,
+  }),
+  loginUser
+);
 
-export default router ;
+router.post(
+  '/verify-email',
+  validateRequest({
+    body: verifyEmailSchema,
+  }),
+  verifyEmail
+);
+
+export default router;

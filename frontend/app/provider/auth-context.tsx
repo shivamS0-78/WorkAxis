@@ -1,13 +1,13 @@
-import type { User } from "../types";
-import { createContext, useContext, useEffect, useState } from "react";
-import { queryClient } from "./react-query-provider";
-import { useLocation, useNavigate } from "react-router";
+import type { User } from '../types';
+import { createContext, useContext, useEffect, useState } from 'react';
+import { queryClient } from './react-query-provider';
+import { useLocation, useNavigate } from 'react-router';
 
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (email: string , password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -18,17 +18,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-
-const login = async (email: string , password: string) => {
-    console.log(email,password);
+  const login = async (email: string, password: string) => {
+    console.log(email, password);
   };
 
-const logout = async () => {
-    console.log("logout");
-}
+  const logout = async () => {
+    console.log('logout');
+  };
 
-
-const values = {
+  const values = {
     user,
     isAuthenticated,
     isLoading,
@@ -43,7 +41,7 @@ export const useAuth = () => {
   const context = useContext(AuthContext);
 
   if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 };
