@@ -2,6 +2,7 @@ import type { User } from '../types';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { queryClient } from './react-query-provider';
 import { useLocation, useNavigate } from 'react-router';
+import { publicRoutes } from '@/lib';
 
 interface AuthContextType {
   user: User | null;
@@ -18,12 +19,58 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const login = async (email: string, password: string) => {
-    console.log(email, password);
+  const navigate = useNavigate();
+  const currentPath = useLocation().pathname;
+  const isPublicRoute = publicRoutes.includes(currentPath);
+
+  //checking if uesr is authentictaed
+  useEffect(()=>{
+    const checkAuth = async() =>{
+      setIsLoading(true);
+      try{
+        const storedUser = localStorage.getItem("user");
+
+        if(storedUser){
+          setUser(JSON.parse(storedUser));
+          setIsAuthenticated(true);
+        }else{
+          setUser(null);
+          setIsAuthenticated(false);
+          if(!isPublicRoute){
+            navigate("/sign-in");
+          }
+        }
+      }catch(err){
+        console.log("Auth check failed : " , err);
+      }finally{
+        setIsLoading(false);
+      }
+    };
+    checkAuth();
+  },[]);
+
+  useEffect(() => {
+    const handleLogout = () => {
+      logout();
+      navigate("/sign-in");
+    };
+    window.addEventListener("force-logout", handleLogout);
+    return () => window.removeEventListener("force-logout", handleLogout);
+  }, []);
+
+  const login = async (data: any) => {
+    console.log(data);
+    localStorage.setItem("token" , data.token);
+    localStorage.setItem("user" , JSON.stringify(data.user));
+    setUser(data.user);
+    setIsAuthenticated(true);
   };
 
   const logout = async () => {
-    console.log('logout');
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    queryClient.clear();
   };
 
   const values = {

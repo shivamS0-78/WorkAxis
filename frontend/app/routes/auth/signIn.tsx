@@ -20,13 +20,16 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useLoginMutation } from '@/hooks/use-auth';
+import { toast } from 'sonner';
 
-type signInFormData = z.infer<typeof signInSchema>;
+export type SignInFormData = z.infer<typeof signInSchema>;
 const SignIn = () => {
-  const form = useForm<signInFormData>({
+  const navigate = useNavigate();
+  const form = useForm<SignInFormData>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
       email: '',
@@ -34,8 +37,23 @@ const SignIn = () => {
     },
   });
 
-  const handleOnSubmit = (values: signInFormData) => {
-    console.log(values);
+const {mutate , isPending} = useLoginMutation();
+
+  const handleOnSubmit = (values: SignInFormData) => {
+    mutate(values ,{
+      onSuccess: (data)=>{
+      
+        console.log(data);
+        toast.success("Login successful");
+        navigate("/dashboard");
+      },
+      onError: (error: any) => {
+        const errorMessage =
+        error.response?.data?.message || "an error occurred";
+      console.log(error);
+      toast.error(errorMessage);
+      },
+    });
   };
 
   return (
