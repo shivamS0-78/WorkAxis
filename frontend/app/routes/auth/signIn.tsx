@@ -25,6 +25,7 @@ import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useLoginMutation } from '@/hooks/use-auth';
 import { toast } from 'sonner';
+import { useAuth } from '@/provider/auth-context';
 
 export type SignInFormData = z.infer<typeof signInSchema>;
 const SignIn = () => {
@@ -37,21 +38,22 @@ const SignIn = () => {
     },
   });
 
-const {mutate , isPending} = useLoginMutation();
+  const { mutate, isPending } = useLoginMutation();
+  const { login } = useAuth();
 
   const handleOnSubmit = (values: SignInFormData) => {
-    mutate(values ,{
-      onSuccess: (data)=>{
-      
+    mutate(values, {
+      onSuccess: (data) => {
         console.log(data);
+        login(data);
         toast.success("Login successful");
         navigate("/dashboard");
       },
       onError: (error: any) => {
         const errorMessage =
-        error.response?.data?.message || "an error occurred";
-      console.log(error);
-      toast.error(errorMessage);
+          error.response?.data?.message || "an error occurred";
+        console.log(error);
+        toast.error(errorMessage);
       },
     });
   };
@@ -112,8 +114,8 @@ const {mutate , isPending} = useLoginMutation();
                 )}
               />
 
-              <Button type="submit" className="w-full">
-                Sign in
+              <Button type="submit" className="w-full" disabled={isPending}>
+                {isPending ? <Loader2 className='w-4 h-4 mr-2 ' /> : 'Sign-in'}
               </Button>
             </form>
           </Form>

@@ -46,8 +46,8 @@ const registerUser = async (req, res) => {
     });
 
     //send email
-    const verificationLink = `${process.env.FRONTEND_URL}/verify-email/?token=${verificationToken}`;
-    const emailBody = `<p> Click <a href=${verificationLink}>here</a> to verify your link`;
+    const verificationLink = `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`;
+    const emailBody = `<p>Click <a href="${verificationLink}">here</a> to verify your link</p>`;
     const emailSubject = 'Verify your email';
 
     const isEmailSent = await sendEmail(email, emailSubject, emailBody);
@@ -74,7 +74,7 @@ const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne(email).select('+password');
+    const user = await User.findOne({ email }).select('+password');
 
     if (!user) {
       return res.status(400).json({ message: 'Invalid email or password' });
@@ -95,7 +95,7 @@ const loginUser = async (req, res) => {
 
         const verificationToken = jwt.sign(
           { userId: user._id, purpose: 'email-verification' },
-          process.env.JWT_SECRET,
+          process.env.JWT_SECRET_KEY,
           { expiresIn: '1h' }
         );
 
@@ -133,7 +133,7 @@ const loginUser = async (req, res) => {
 
     const token = jwt.sign(
       { userId: user._id, purpose: "login" },
-      process.env.JWT_SECRET,
+      process.env.JWT_SECRET_KEY,
       { expiresIn: "7d" }
     );
 
@@ -148,7 +148,7 @@ const loginUser = async (req, res) => {
         token,
         user: userData,
     });
-  } catch (e) {
+  } catch (error) {
     console.log(error);
 
     res.status(500).json({ message: "Internal server error" });
@@ -212,6 +212,10 @@ const verifyEmail = async (req, res) => {
     await user.save();
 
     await Verification.findByIdAndDelete(verification._id);
+    
+    return res.status(200).json({
+      message: 'Email verified successfully',
+    });
   } catch (e) {
     console.log(e);
     res.status(500).json({
