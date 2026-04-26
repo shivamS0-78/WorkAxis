@@ -15,6 +15,7 @@ export default [
     route('verify-email', 'routes/auth/verifyEmail.tsx'),
   ]),
   layout('routes/dashboard/dashboard-layout.tsx',[
-    route('dashboard' , 'routes/dashboard/index.tsx')
+    route('dashboard' , 'routes/dashboard/index.tsx'),
+    route('projects' , 'routes/dashboard/projects/projects.tsx')
   ])
 ] satisfies RouteConfig;
