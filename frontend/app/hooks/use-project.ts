@@ -1,4 +1,4 @@
-import type { CreateProjectFormData } from "@/components/projectDash/create-project";
+import type { CreateProjectFormData } from "@/components/project/create-project";
 import { fetchData, postData } from "@/lib/fetch-util";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 

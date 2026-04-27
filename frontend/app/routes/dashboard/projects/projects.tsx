@@ -1,7 +1,7 @@
 import { Loader } from '@/components/loader';
-import CreateProjectDialog from '@/components/projectDash/create-project';
-import InviteMemberDialog from '@/components/projectDash/invite-member';
-import Projectlist from '@/components/projectDash/projectlist';
+import CreateProjectDialog from '@/components/project/create-project';
+import InviteMemberDialog from '@/components/project/invite-member';
+import Projectlist from '@/components/project/projectlist';
 import { useGetProjectQuery } from '@/hooks/use-project';
 import type { Project } from '@/types';
 import React, { useState } from 'react'
