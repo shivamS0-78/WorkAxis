@@ -1,47 +1,50 @@
-#MERN Stack Project & Task Manager
+**MERN Stack Project & Task Manager**
 A comprehensive, cloud-based Project and Task Management application built with the MERN stack. This platform allows teams to collaborate seamlessly, manage workspaces, track project progress, and handle task assignments with a modern, responsive UI.
 
-#Features
-Admin & Workspace Management
-Workspace Creation: Create and manage multiple workspaces for different teams or departments.
+🚀 **Features**
+**Admin & Workspace Management**
 
-User Management: Add, manage, and invite team members to specific workspaces.
+  *Workspace Creation: Create and manage multiple workspaces for different teams or departments.
 
-Role-Based Access: Secure authentication and authorization for different user levels.
+  *User Management: Add, manage, and invite team members to specific workspaces.
 
-Project & Task Tracking
-Task Lifecycle: Manage tasks through stages: Todo, In Progress, and Completed.
+  *Role-Based Access: Secure authentication and authorization for different user levels.
 
-Priority Levels: Assign tasks with High, Medium, Normal, or Low priority.
+**Project & Task Tracking**
 
-Sub-tasks: Break down complex tasks into manageable sub-tasks.
+  *Task Lifecycle: Manage tasks through stages: Todo, In Progress, and Completed.
 
-Asset Management: Upload and manage task-related assets and images.
+  *Priority Levels: Assign tasks with High, Medium, Normal, or Low priority.
 
-Communication & UI
-Real-time Interaction: Add comments and chat within task activities.
+  *Sub-tasks: Break down complex tasks into manageable sub-tasks.
 
-Responsive Design: Fully optimized for desktop and mobile using Tailwind CSS v4.
+  *Asset Management: Upload and manage task-related assets and images.*
 
-Modern UI Components: Built with Shadcn UI and Headless UI for a sleek user experience.
+**Communication & UI**
 
-🛠 Tech Stack
-Frontend:
+  *Real-time Interaction: Add comments and chat within task activities.
 
-React.js (Vite)
+  *Responsive Design: Fully optimized for desktop and mobile using Tailwind CSS v4.
 
-TypeScript
+  *Modern UI Components: Built with Shadcn UI and Headless UI for a sleek user experience.
 
-React Router v7
+🛠 **Tech Stack**
+**Frontend:**
 
-Tailwind CSS v4 & Shadcn UI
+  *React.js (Vite)
 
-Backend:
+  *TypeScript
 
-Node.js & Express.js
+  *React Router v7
 
-MongoDB (Database)
+  *Tailwind CSS v4 & Shadcn UI
 
-JSON Web Tokens (JWT) (Authentication)
+**Backend:**
 
-SendGrid (Email Verification & Notifications)
+  *Node.js & Express.js
+
+  *MongoDB (Database)
+
+  *JSON Web Tokens (JWT) (Authentication)
+
+  *SendGrid (Email Verification & Notifications)
