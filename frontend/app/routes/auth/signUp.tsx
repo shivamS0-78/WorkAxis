@@ -1,4 +1,4 @@
-import { signUpSchema } from '@/lib/signInSchema';
+import { signUpSchema } from '@/lib/schema';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';

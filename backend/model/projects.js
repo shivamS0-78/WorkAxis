@@ -10,6 +10,11 @@ const projectSchema = new Schema(
         description: {
             type: String , trim: true
         },
+        workspace: {
+        type: Schema.Types.ObjectId,
+        ref: "Workspace",
+        required: true,
+        },
         status: {
             type: String,
             enum: ["Planning", "In Progress", "On Hold", "Completed", "Cancelled"],
@@ -34,7 +39,6 @@ const projectSchema = new Schema(
     ],
     tags: [{ type: String }],
     createdBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    isArchived: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

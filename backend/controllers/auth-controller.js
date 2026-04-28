@@ -17,6 +17,7 @@ const registerUser = async (req, res) => {
     if (decision.isDenied()) {
       res.writeHead(403, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ message: 'Invalid email address' }));
+      return;
     }
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -144,9 +145,9 @@ const loginUser = async (req, res) => {
     delete userData.password;
 
     return res.status(200).json({
-        message : "Login successful",
-        token,
-        user: userData,
+      message: "Login successful",
+      token,
+      user: userData,
     });
   } catch (error) {
     console.log(error);
@@ -212,7 +213,7 @@ const verifyEmail = async (req, res) => {
     await user.save();
 
     await Verification.findByIdAndDelete(verification._id);
-    
+
     return res.status(200).json({
       message: 'Email verified successfully',
     });

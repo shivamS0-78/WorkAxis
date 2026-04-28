@@ -38,4 +38,10 @@ const projectSchema = z.object({
     .optional(),
 });
 
-export { projectSchema ,registerSchema, loginSchema, verifyEmailSchema };
+const workspaceSchema = z.object({
+  name: z.string().min(3, "Name is required"),
+  description: z.string().optional(),
+  color: z.string().optional(),
+});
+
+export { projectSchema ,registerSchema, loginSchema, verifyEmailSchema, workspaceSchema };

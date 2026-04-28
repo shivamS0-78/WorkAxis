@@ -1,62 +1,84 @@
-import Project from "../model/projects.js"
-
-const getProjects = async (req, res) => {
-    try {
-        const projects = await Project.find({
-            $or: [
-                { "members.user": req.user._id },
-                { createdBy: req.user._id }
-            ]
-        })
-            .populate("tasks", "status")
-            .sort({ createdAt: -1 });
-
-        res.status(200).json({ projects });
-    } catch (err) {
-        console.log(err);
-        res.status(500).json({
-            message: "Internal server error",
-        })
-    }
-};
-
+import Project from "../model/projects.js";
+import Workspace from "../model/workspace.js";
 
 const createProjects = async (req, res) => {
-    try {
+  try {
+    const { workspaceId } = req.params;
+    const { title, description, status, startDate, dueDate, tags, members } =
+      req.body;
 
-        const { title, description, status, startDate, dueDate, tags, members } = req.body;
+    const workspace = await Workspace.findById(workspaceId);
 
-        // const isMember = projects.members.some((member) => member.user.toString() === req.user._id.toString());
-
-        // if(!isMember){
-        //     return res.status(403).json({
-        //         message : "You are not a member of this project"
-        //     })
-        // }
-
-        const tagsArray = tags ? tags.split(",") : [];
-
-        const newProject = await Project.create({
-            title,
-            description,
-            status,
-            startDate,
-            dueDate,
-            tags: tagsArray,
-            members,
-            createdBy: req.user._id,
-        });
-
-        await newProject.save();
-
-        res.status(201).json({ project: newProject, message: "Project created successfully" });
-
-    } catch (err) {
-        console.log(err)
-        return res.status(500).json({
-            message: "Internal Sever Error",
-        });
+    if (!workspace) {
+      return res.status(404).json({
+        message: "Workspace not found",
+      });
     }
-}
 
+    const isMember = workspace.members.some(
+      (member) => member.user.toString() === req.user._id.toString()
+    );
+
+    if (!isMember) {
+      return res.status(403).json({
+        message: "You are not a member of this workspace",
+      });
+    }
+
+    const tagArray = tags ? tags.split(",") : [];
+
+    const newProject = await Project.create({
+      title,
+      description,
+      status,
+      startDate,
+      dueDate,
+      tags: tagArray,
+      workspace: workspaceId,
+      members,
+      createdBy: req.user._id,
+    });
+
+    workspace.projects.push(newProject._id);
+    await workspace.save();
+
+    return res.status(201).json(newProject);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};
+
+const getProjects = async (req, res) => {
+  try {
+    const { projectId } = req.params;
+
+    const project = await Project.findById(projectId);
+
+    if (!project) {
+      return res.status(404).json({
+        message: "Project not found",
+      });
+    }
+
+    const isMember = project.members.some(
+      (member) => member.user.toString() === req.user._id.toString()
+    );
+
+    if (!isMember) {
+      return res.status(403).json({
+        message: "You are not a member of this project",
+      });
+    }
+
+    res.status(200).json(project);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};
 export { getProjects, createProjects };

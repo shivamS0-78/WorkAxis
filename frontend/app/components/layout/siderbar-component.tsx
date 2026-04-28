@@ -1,16 +1,30 @@
-import { CheckCircle2, ChevronsLeft, ChevronsRight, LayoutDashboard, ListCheck, LogOut, Settings, Users, Wrench } from 'lucide-react';
-import React, { useState } from 'react'
-import { Link } from 'react-router';
-import { Button } from '../ui/button';
-import { useAuth } from '@/provider/auth-context';
-import { cn } from '@/lib/utils';
-import SidebarNav from './siedbar-nav';
-import { ScrollArea } from '../ui/scroll-area';
+import { cn } from "@/lib/utils";
+import { useAuth } from "@/provider/auth-context";
+import type { Workspace } from "@/types";
+import {
+  CheckCircle2,
+  ChevronsLeft,
+  ChevronsRight,
+  LayoutDashboard,
+  ListCheck,
+  LogOut,
+  Settings,
+  Users,
+  Wrench,
+} from "lucide-react";
+import { useState } from "react";
+import { Link } from "react-router";
+import { Button } from "../ui/button";
+import { ScrollArea } from "../ui/scroll-area";
+import SidebarNav from "./siedbar-nav";
 
-const SidebarComponent = () => {
-
-  const { user , logout } = useAuth();
-  const [isCollapsed , setIsCollapsed] = useState(false);
+export const SidebarComponent = ({
+  currentWorkspace,
+}: {
+  currentWorkspace: Workspace | null;
+}) => {
+  const { user, logout } = useAuth();
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   const navItems = [
     {
@@ -19,8 +33,8 @@ const SidebarComponent = () => {
       icon: LayoutDashboard,
     },
     {
-      title: "Projects",
-      href: "/projects",
+      title: "Workspaces",
+      href: "/workspaces",
       icon: Users,
     },
     {
@@ -34,6 +48,11 @@ const SidebarComponent = () => {
       icon: Users,
     },
     {
+      title: "Achieved",
+      href: `/achieved`,
+      icon: CheckCircle2,
+    },
+    {
       title: "Settings",
       href: "/settings",
       icon: Settings,
@@ -44,7 +63,7 @@ const SidebarComponent = () => {
     <div
       className={cn(
         "flex flex-col border-r bg-sidebar transition-all duration-300",
-        isCollapsed ? "w-16 md:w[80px]" : "w-16 md:w-60"
+        isCollapsed ? "w-16 md:w[80px]" : "w-16 md:w-[240px]"
       )}
     >
       <div className="flex h-14 items-center border-b px-4 mb-4">
@@ -80,11 +99,11 @@ const SidebarComponent = () => {
           items={navItems}
           isCollapsed={isCollapsed}
           className={cn(isCollapsed && "items-center space-y-2")}
-          currentWorkspace={null}
+          currentWorkspace={currentWorkspace}
         />
       </ScrollArea>
 
-      <div className="border-t p-3 pr-28 flex flex-col gap-2">
+      <div>
         <Button
           variant={"ghost"}
           size={isCollapsed ? "icon" : "default"}
@@ -97,5 +116,3 @@ const SidebarComponent = () => {
     </div>
   );
 };
-
-export default SidebarComponent
