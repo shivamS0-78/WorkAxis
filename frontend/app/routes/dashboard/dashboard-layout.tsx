@@ -1,12 +1,22 @@
-import React, { useState } from 'react'
-import { Loader } from '@/components/loader'
-import { Navigate, Outlet } from 'react-router';
-import SidebarComponent from '@/components/layout/siderbar-component';
-import { Header } from '@/components/layout/header';
-import { useAuth } from '@/provider/auth-context';
-import type { Workspace } from '@/types';
+import { Header } from "@/components/layout/header";
+import {SidebarComponent} from "@/components/layout/siderbar-component";
+import { Loader } from "@/components/loader";
+import { CreateWorkspace } from "@/components/workspace/create-workspace";
+import { fetchData } from "@/lib/fetch-util";
+import { useAuth } from "@/provider/auth-context";
+import type { Workspace } from "@/types";
+import { useState } from "react";
+import { Navigate, Outlet } from "react-router";
 
-const Dashboardlayout = () => {
+export const clientLoader = async () => {
+  try {
+    const [workspaces] = await Promise.all([fetchData("/workspaces")]);
+    return { workspaces };
+  } catch (error) {
+    console.log(error);
+  }
+};
+const DashboardLayout = () => {
   const { isAuthenticated, isLoading } = useAuth();
   const [isCreatingWorkspace, setIsCreatingWorkspace] = useState(false);
   const [currentWorkspace, setCurrentWorkspace] = useState<Workspace | null>(
@@ -21,17 +31,19 @@ const Dashboardlayout = () => {
     return <Navigate to="/sign-in" />;
   }
 
-
   const handleWorkspaceSelected = (workspace: Workspace) => {
     setCurrentWorkspace(workspace);
   };
 
   return (
     <div className="flex h-screen w-full">
-      <SidebarComponent />
+      <SidebarComponent currentWorkspace={currentWorkspace} />
 
       <div className="flex flex-1 flex-col h-full">
         <Header
+          onWorkspaceSelected={handleWorkspaceSelected}
+          selectedWorkspace={currentWorkspace}
+          onCreateWorkspace={() => setIsCreatingWorkspace(true)}
         />
 
         <main className="flex-1 overflow-y-auto h-full w-full">
@@ -40,8 +52,13 @@ const Dashboardlayout = () => {
           </div>
         </main>
       </div>
+
+      <CreateWorkspace
+        isCreatingWorkspace={isCreatingWorkspace}
+        setIsCreatingWorkspace={setIsCreatingWorkspace}
+      />
     </div>
   );
 };
 
-export default Dashboardlayout
+export default DashboardLayout;
