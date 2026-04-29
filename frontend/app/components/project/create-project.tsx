@@ -1,38 +1,58 @@
-import { UseCreateProject } from '@/hooks/use-project';
-import { projectSchema } from '@/lib/signInSchema';
-import { ProjectStatus, type MemberProps } from '@/types';
-import { zodResolver } from '@hookform/resolvers/zod';
-import React from 'react'
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
-import {z} from "zod";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
-import { Input } from '../ui/input';
-import { Textarea } from '../ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
-import { Button } from '../ui/button';
-import { CalendarIcon } from 'lucide-react';
-import { format } from 'date-fns';
-import { Calendar } from '../ui/calendar';
-import { Checkbox } from '../ui/checkbox';
+import { projectSchema } from "@/lib/schema";
+import { ProjectStatus, type MemberProps } from "@/types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "../ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
+import { Input } from "../ui/input";
+import { Textarea } from "../ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Button } from "../ui/button";
 
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import { Calendar } from "../ui/calendar";
+import { Checkbox } from "../ui/checkbox";
+import { UseCreateProject } from "@/hooks/use-project";
+import { toast } from "sonner";
 
-interface CreateProjectProps {
-  isOpen : boolean;
-  onOpenChange : (open: boolean) => void ;
-  // projectMembers: MemberProps[];
+interface CreateProjectDialogProps {
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
+  workspaceId: string;
+  workspaceMembers: MemberProps[];
 }
 
 export type CreateProjectFormData = z.infer<typeof projectSchema>;
 
-export const CreateProjectDialog = (
-  {isOpen,
+export const CreateProjectDialog = ({
+  isOpen,
   onOpenChange,
-  // projectMembers ,
-}: CreateProjectProps) => {
-
+  workspaceId,
+  workspaceMembers,
+}: CreateProjectDialogProps) => {
   const form = useForm<CreateProjectFormData>({
     resolver: zodResolver(projectSchema),
     defaultValues: {
@@ -45,14 +65,15 @@ export const CreateProjectDialog = (
       tags: undefined,
     },
   });
-
-  const {mutate , isPending}  = UseCreateProject();
+  const { mutate, isPending } = UseCreateProject();
 
   const onSubmit = (values: CreateProjectFormData) => {
+    if (!workspaceId) return;
 
     mutate(
       {
         projectData: values,
+        workspaceId,
       },
       {
         onSuccess: () => {
@@ -146,7 +167,7 @@ export const CreateProjectDialog = (
                     <FormLabel>Start Date</FormLabel>
                     <FormControl>
                       <Popover modal={true}>
-                        <PopoverTrigger >
+                        <PopoverTrigger>
                           <Button
                             variant={"outline"}
                             className={
@@ -188,7 +209,7 @@ export const CreateProjectDialog = (
                     <FormLabel>Due Date</FormLabel>
                     <FormControl>
                       <Popover modal={true}>
-                        <PopoverTrigger >
+                        <PopoverTrigger>
                           <Button
                             variant={"outline"}
                             className={
@@ -238,7 +259,7 @@ export const CreateProjectDialog = (
               )}
             />
 
-            {/* <FormField
+            <FormField
               control={form.control}
               name="members"
               render={({ field }) => {
@@ -249,7 +270,7 @@ export const CreateProjectDialog = (
                     <FormLabel>Members</FormLabel>
                     <FormControl>
                       <Popover>
-                        <PopoverTrigger >
+                        <PopoverTrigger>
                           <Button
                             variant={"outline"}
                             className="w-full justify-start text-left font-normal min-h-11"
@@ -260,7 +281,7 @@ export const CreateProjectDialog = (
                               </span>
                             ) : selectedMembers.length <= 2 ? (
                               selectedMembers.map((m) => {
-                                const member = projectMembers.find(
+                                const member = workspaceMembers.find(
                                   (wm) => wm.user._id === m.user
                                 );
 
@@ -276,7 +297,7 @@ export const CreateProjectDialog = (
                           align="start"
                         >
                           <div className="flex flex-col gap-2">
-                            {projectMembers.map((member) => {
+                            {workspaceMembers.map((member) => {
                               const selectedMember = selectedMembers.find(
                                 (m) => m.user === member.user._id
                               );
@@ -357,7 +378,7 @@ export const CreateProjectDialog = (
                   </FormItem>
                 );
               }}
-            /> */}
+            />
 
             <DialogFooter>
               <Button type="submit" disabled={isPending}>
@@ -370,5 +391,3 @@ export const CreateProjectDialog = (
     </Dialog>
   );
 };
-
-export default CreateProjectDialog
