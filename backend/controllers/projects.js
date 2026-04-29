@@ -106,7 +106,6 @@ const getProjectTasks = async (req, res) => {
 
     const tasks = await Task.find({
       project: projectId,
-      isArchived: false,
     })
       .populate("assignees", "name profilePicture")
       .sort({ createdAt: -1 });
@@ -123,4 +122,4 @@ const getProjectTasks = async (req, res) => {
   }
 };
 
-export { getProjects, createProjects ,getProjectTasks };
+export { getProjects, createProjects, getProjectTasks };

@@ -1,19 +1,42 @@
 import express from "express";
 import authMiddleware from "../middleware/auth-middleware.js";
-import { createProjects, getProjects } from "../controllers/projects.js";
-import Project from "../model/projects.js";
-import { projectSchema } from "../libs/validateSchema.js";
 import { validateRequest } from "zod-express";
+import { z } from "zod";
+import {
+  createProjects,
+  getProjects,
+  getProjectTasks,
+} from "../controllers/projects.js";
+import { projectSchema } from "../libs/validateSchema.js";
+
 const router = express.Router();
 
-router.get("/",authMiddleware,getProjects);
-
-router.post("/create-project",
-    authMiddleware,
-    validateRequest({
-        body: projectSchema, 
+router.post(
+  "/:workspaceId/create-project",
+  authMiddleware,
+  validateRequest({
+    params: z.object({
+      workspaceId: z.string(),
     }),
-    createProjects,
+    body: projectSchema,
+  }),
+  createProjects
+);
+
+router.get(
+  "/:projectId",
+  authMiddleware,
+  validateRequest({
+    params: z.object({ projectId: z.string() }),
+  }),
+  getProjects
+);
+
+router.get(
+  "/:projectId/tasks",
+  authMiddleware,
+  validateRequest({ params: z.object({ projectId: z.string() }) }),
+  getProjectTasks
 );
 
 export default router ;

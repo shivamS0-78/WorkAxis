@@ -8,22 +8,24 @@ import {
   CardTitle,
 } from "../ui/card";
 import { cn } from "@/lib/utils";
-import { CalendarDays } from "lucide-react";
+import { getTaskStatusColor } from "@/lib";
 import { Progress } from "../ui/progress";
-import { getTaskStatusColor } from "../../lib/index";
-import { format } from 'date-fns';
+import { format } from "date-fns";
+import { CalendarDays } from "lucide-react";
 
 interface ProjectCardProps {
   project: Project;
   progress: number;
+  workspaceId: string;
 }
 
 export const ProjectCard = ({
   project,
   progress,
+  workspaceId,
 }: ProjectCardProps) => {
   return (
-    <Link to={`/projects/${project._id}`}>
+    <Link to={`/workspaces/${workspaceId}/projects/${project._id}`}>
       <Card className="transition-all duration-300 hover:shadow-md hover:translate-y-1">
         <CardHeader>
           <div className="flex items-center justify-between">
@@ -31,7 +33,7 @@ export const ProjectCard = ({
             <span
               className={cn(
                 "text-xs rounded-full",
-                // getTaskStatusColor(project.status)
+                getTaskStatusColor(project.status)
               )}
             >
               {project.status}
