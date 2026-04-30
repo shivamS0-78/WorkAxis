@@ -32,9 +32,11 @@ export default [
     route(
       "my-tasks","routes/dashboard/my-tasks.tsx"
     ),
-    route(
+  ]),
+
+  route(
     "workspace-invite/:workspaceId",
     "routes/dashboard/workspaces/workspace-invite.tsx"
   ),
-  ])
+  
 ] satisfies RouteConfig;
